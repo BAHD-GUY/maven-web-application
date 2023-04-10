@@ -98,13 +98,13 @@
 	    <repository>
 	      <id>nexus</id>
 	      <name>Landmark Technologies Releases Nexus Repository</name>
-	      <url>http://54.242.55.222:8081/repository/runrelease/</url>
+	      <url>http://54.242.55.222:8081/repository/paypaljob-release/</url>
 	    </repository>
 	    
 	    <snapshotRepository>
 	      <id>nexus</id>
 	      <name>Landmark Technologies Snapshot Nexus Repository </name>
-	      <url>http://54.242.55.222:8081/repository/runsnapshot//</url>
+	      <url>http://54.242.55.222:8081/repository/paypal-jobslave/</url>
 	    </snapshotRepository>
 	    
 	</distributionManagement>
