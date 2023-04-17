@@ -1,0 +1,51 @@
+pipeline{
+    agent {
+        label 'masterJ'
+    }
+    tools {
+        maven 'maven3.9.1'
+    }
+    stages {
+        stage('1Clone'){
+            steps{
+            sh "echo 'cloning the lastest application version'"
+            git "https://github.com/BAHD-GUY/maven-web-application.git"
+        }
+    }
+    stage('2TestBuild'){
+        steps{
+            sh "echo 'running JUnit-test-cases'"
+            sh "echo 'testing must passed to create artifacts' "
+            sh "mvn clean package"
+        }
+    }
+    stage('3CodeQualityAnalysis'){
+        steps{
+            sh "echo setup sonarQube authtication"
+            sh "echo 'Performing CodeQualityAnalysis'"
+            sh "mvn sonar:sonar"
+        }
+    }
+    stage('4UploadArtifacts'){
+        steps{
+            sh "echo configure nexus authentication"
+            sh "mvn deploy"
+        }
+    }
+    stage('5deploy'){
+        steps{
+            deploy adapters: [tomcat9(credentialsId: 'Tomcatcredentials', path: '', url: 'http://34.229.120.24:8080')], contextPath: null, war: 'target/*.war'
+        }
+    }
+    }
+    post{
+        success{
+            emailext body: '''Great job team
+A-Azeez''', recipientProviders: [buildUser(), developers(), requestor(), brokenTestsSuspects()], subject: 'Build Success', to: 'sneezyazeez50@gmail.com'
+        }
+        failure{
+            emailext body: '''Please review job again
+A-Azeez''', recipientProviders: [buildUser(), developers(), requestor(), brokenTestsSuspects()], subject: 'Build Failure', to: 'sneezyazeez50@gmail.com'
+        }
+    }
+}
